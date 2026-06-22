@@ -1,1 +1,42 @@
+name: Update Insilico dashboard
 
+on:
+  schedule:
+    # Twice daily — 06:00 and 16:00 UTC (≈ 08:00 / 18:00 CET). Cron is UTC on GitHub.
+    - cron: "0 6,16 * * *"
+  workflow_dispatch: {}   # lets you run it manually from the Actions tab
+
+permissions:
+  contents: write   # commit the regenerated page; branch-based Pages auto-publishes the commit
+
+concurrency:
+  group: insilico-dashboard
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Regenerate dashboard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}   # optional (email alerts)
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}     # optional
+        run: python update_dashboard.py
+
+      - name: Commit updated page
+        run: |
+          git config user.name  "insilico-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html data.json
+          git commit -m "auto: refresh dashboard $(date -u +%FT%TZ)" || echo "no changes"
+          git push
