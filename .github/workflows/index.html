@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insilico Medicine — Catalyst & News Dashboard</title>
+<style>
+:root{color-scheme:light;
+--navy:#1F3A5F;--blue:#2E75B6;--ink:#1c2330;--muted:#5b6675;--line:#e4e8ee;--bg:#f6f8fb;--card:#ffffff;
+--green:#1d9e75;--greenbg:#e1f5ee;--amber:#ba7517;--amberbg:#faeeda;--red:#c0392b;--redbg:#fbeaea;--graybg:#eef1f5;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;font-size:15px}
+.wrap{max-width:1060px;margin:0 auto;padding:20px 18px 56px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;border-bottom:3px solid var(--blue);padding-bottom:14px;margin-bottom:6px}
+.brand h1{margin:0;font-size:22px;color:var(--navy);letter-spacing:.2px}
+.brand .sub{color:var(--muted);font-size:13px;margin-top:2px}
+.updated{font-size:12.5px;color:var(--muted);text-align:right}
+.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 1px 2px rgba(20,30,50,.04)}
+.card h2{margin:0 0 12px;font-size:15px;color:var(--navy);font-weight:600;display:flex;align-items:center;gap:8px}
+.card h2 .sub{font-weight:400;font-size:12px;color:var(--muted)}
+.sectoggle{cursor:pointer;border:1px solid var(--line);background:var(--bg);border-radius:7px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--blue);font-size:12px;line-height:1;padding:0}
+.sectoggle:hover{background:var(--graybg)}
+.sectoggle .chev{transition:transform .15s ease}
+.card.collapsed .sectoggle .chev{transform:rotate(-90deg)}
+.card.collapsed h2{margin-bottom:0}
+.card.collapsed .secbody{display:none}
+.hlink{color:var(--blue);text-decoration:none;font-size:12px;margin-left:6px;white-space:nowrap}
+.hlink:hover{text-decoration:underline}
+/* direction */
+.dir{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.badge{font-weight:700;font-size:18px;padding:8px 16px;border-radius:10px}
+.b-cond{background:var(--amberbg);color:#8a5a08;border:1px solid #e8c98a}
+.b-buy{background:var(--greenbg);color:#0f6e56;border:1px solid #9fe1cb}
+.b-sell{background:var(--redbg);color:#922;border:1px solid #f0baba}
+.metrics{display:flex;gap:22px;flex-wrap:wrap}
+.metric .v{font-size:19px;font-weight:700;color:var(--navy)}
+.metric .l{font-size:12px;color:var(--muted)}
+.rationale{margin:12px 0 0;padding:0;list-style:none;font-size:14px}
+.rationale li{padding:5px 0 5px 20px;position:relative}
+.rationale li:before{content:"";position:absolute;left:2px;top:12px;width:8px;height:8px;border-radius:50%;background:var(--blue)}
+/* timeline */
+.tl{position:relative;margin:0;padding:0 0 0 118px;list-style:none}
+.tl:before{content:"";position:absolute;left:100px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.tl li{position:relative;margin-bottom:14px}
+.tl .date{position:absolute;left:-118px;width:92px;text-align:right;font-size:12.5px;color:var(--muted);font-weight:600;top:1px}
+.tl .dot{position:absolute;left:-23px;top:3px;width:13px;height:13px;border-radius:50%;border:2px solid #fff}
+.tl .body{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.tl .body .t{font-weight:600;font-size:14.5px}
+.tl .body .d{font-size:13px;color:var(--muted)}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;margin-left:6px;vertical-align:middle;text-transform:uppercase;letter-spacing:.4px}
+.p-clin{background:var(--greenbg);color:#0f6e56}
+.dot-clin{background:var(--green)}.dot-risk{background:var(--red)}.dot-corp{background:#8a93a3}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+.tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px}
+.t-open{background:var(--redbg);color:#922}.t-soon{background:var(--amberbg);color:#8a5a08}.t-locked{background:var(--graybg);color:#445}
+/* news (expandable) */
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:10px 0;border-bottom:1px solid var(--line)}
+.news li:last-child{border-bottom:0}
+.news .row{display:flex;align-items:flex-start;gap:8px}
+.news .hl{font-weight:600;font-size:14px;flex:1}
+.news a{color:var(--blue);text-decoration:none}
+.news a:hover{text-decoration:underline}
+.news .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.sent{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:8px;margin-left:6px}
+.s-pos{background:var(--greenbg);color:#0f6e56}.s-neg{background:var(--redbg);color:#922}.s-neu{background:var(--graybg);color:#445}
+.toggle{cursor:pointer;border:1px solid var(--line);background:var(--bg);border-radius:7px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:var(--muted);font-size:13px;line-height:1}
+.toggle:hover{background:var(--graybg)}
+.chev{transition:transform .15s ease}
+.open .chev{transform:rotate(180deg)}
+.detail{display:none;margin-top:8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px}
+.open .detail{display:block}
+.detail .km{margin:8px 0 0;padding-left:18px}
+.detail .km li{padding:2px 0;border:0;font-size:13px}
+.detail .lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+/* sell-likelihood bar */
+.barwrap{display:flex;align-items:center;gap:8px;min-width:140px}
+.bar{flex:1;height:8px;border-radius:5px;background:var(--graybg);overflow:hidden}
+.bar > i{display:block;height:100%;border-radius:5px}
+.pct{font-weight:700;font-size:13px;width:34px;text-align:right}
+.lvl-low > i{background:var(--green)}.lvl-med > i{background:var(--amber)}.lvl-high > i{background:var(--red)}
+.lvl-low .pct{color:#0f6e56}.lvl-med .pct{color:#8a5a08}.lvl-high .pct{color:#922}
+.note{font-size:12px;color:var(--muted);background:var(--graybg);border-radius:8px;padding:8px 10px;margin-top:10px}
+.sizer{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.sizer label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px;font-weight:600}
+.sizer input{font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:190px;color:var(--ink);background:var(--card)}
+.sizer input:focus{outline:none;border-color:var(--blue)}
+.reco{background:var(--greenbg);border:1px solid #9fe1cb;border-radius:10px;padding:10px 12px;font-size:13.5px;margin-bottom:12px;color:#0f6e56}
+.reco strong{color:#0a5a44}
+#proj td{font-weight:600}
+.row2{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+@media(max-width:760px){.row2{grid-template-columns:1fr}}
+.px{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:12px}
+.px .pxv{font-size:22px;font-weight:700;color:var(--navy)}
+.px .pxl{font-size:11px;color:var(--muted)}
+.px .up{color:#0f6e56}.px .down{color:#922}
+.tvbox{width:100%;border-radius:8px;overflow:hidden}
+.tvlink{display:inline-block;margin-top:8px;color:var(--blue);text-decoration:none;font-size:13px;font-weight:600}
+.tvlink:hover{text-decoration:underline}
+.exec{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.exec{grid-template-columns:1fr}}
+.person{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.person .n{font-weight:600;font-size:14px}.person .r{font-size:12px;color:var(--muted)}
+.person a{font-size:12.5px;color:var(--blue);text-decoration:none}
+.foot{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>Insilico Medicine — Catalyst &amp; News Dashboard</h1>
+      <div class="sub">HKEX: 03696 · AI-driven drug discovery · long-term hold monitor</div>
+    </div>
+    <div class="updated">
+      Last updated:<br><strong id="updated"></strong><br>
+      <span>Auto-refresh: twice daily (08:00 &amp; 18:00)</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- DIRECTION -->
+    <div class="card">
+      <h2>Current direction call</h2>
+      <div class="dir">
+        <div class="badge" id="dir-badge"></div>
+        <div class="metrics">
+          <div class="metric"><div class="v" id="m-price"></div><div class="l">Last price (≈, verify)</div></div>
+          <div class="metric"><div class="v" id="m-ipo"></div><div class="l">IPO price</div></div>
+          <div class="metric"><div class="v" id="m-high"></div><div class="l">All-time high (Feb 26)</div></div>
+          <div class="metric"><div class="v" id="m-cash"></div><div class="l">Cash (FY25)</div></div>
+        </div>
+      </div>
+      <ul class="rationale" id="dir-rationale"></ul>
+      <div class="note" id="dir-note"></div>
+    </div>
+
+    <!-- PROJECTION & SIZING -->
+    <div class="card">
+      <h2>Scenario projection &amp; position sizing <span class="sub">— interactive · illustrative only</span></h2>
+      <div class="sizer">
+        <label>Total investable budget (CHF)
+          <input id="budget" type="number" min="0" step="1000" value="100000" oninput="recalcBudget()">
+        </label>
+        <label>Initial investment (CHF) — editable
+          <input id="initial" type="number" min="0" step="500" value="5000" oninput="compute()">
+        </label>
+      </div>
+      <div class="reco" id="reco"></div>
+      <table>
+        <thead><tr><th>Horizon</th><th>Bear (~35%)</th><th>Base (~45%)</th><th>Bull (~20%)</th><th>Prob-weighted</th></tr></thead>
+        <tbody id="proj"></tbody>
+      </table>
+      <div class="note" id="proj-note"></div>
+    </div>
+
+    <!-- CATALYSTS + PRICE/CHART (side by side) -->
+    <div class="row2">
+      <div class="card">
+        <h2>Upcoming catalysts &amp; milestones</h2>
+        <div class="legend">
+          <span><i class="dot-clin"></i>Clinical readout / milestone</span>
+          <span><i class="dot-risk"></i>Risk / share overhang</span>
+          <span><i class="dot-corp"></i>Corporate / financial</span>
+        </div>
+        <ul class="tl" id="catalysts"></ul>
+      </div>
+
+      <div class="card">
+        <h2>Price &amp; live chart <span class="sub">— HKEX 03696</span></h2>
+        <div class="px">
+          <div><div class="pxv" id="px-hkd"></div><div class="pxl">HKD</div></div>
+          <div><div class="pxv" id="px-usd"></div><div class="pxl">USD (peg ≈ 7.80)</div></div>
+          <div><div class="pxv" id="px-chg"></div><div class="pxl" id="px-asof">vs prev close</div></div>
+        </div>
+        <div id="spark"></div>
+        <div style="font-size:11px;color:var(--muted);margin:2px 0 8px">Indicative path from key points since IPO (not daily) — fills in as the monitor runs.</div>
+        <div class="tvbox">
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {"symbol":"HKEX:3696","width":"100%","height":340,"theme":"light","style":"1","locale":"en","hide_side_toolbar":true,"allow_symbol_change":false,"hide_top_toolbar":false}
+            </script>
+          </div>
+        </div>
+        <a class="tvlink" href="https://www.tradingview.com/symbols/HKEX-3696/" target="_blank" rel="noopener">Open interactive chart on TradingView ↗</a>
+        <div class="note" id="px-note"></div>
+      </div>
+    </div>
+
+    <!-- NEWS (moved up; expandable) -->
+    <div class="card">
+      <h2>Latest news <span class="sub">— click the arrow for a summary</span></h2>
+      <ul class="news" id="news"></ul>
+    </div>
+
+    <!-- LOCK-UPS -->
+    <div class="card">
+      <h2>Lock-up periods</h2>
+      <table>
+        <thead><tr><th>Holder class</th><th>Basis</th><th>Expiry</th><th>Status</th></tr></thead>
+        <tbody id="lockups"></tbody>
+      </table>
+      <div class="note" id="lockup-note"></div>
+    </div>
+
+    <!-- SHARE STRUCTURE -->
+    <div class="card">
+      <h2>Share structure <span class="sub">— from HKEX prospectus ("S-1")</span></h2>
+      <div class="metrics" style="margin-bottom:6px">
+        <div class="metric"><div class="v" id="s-total"></div><div class="l">Total shares post-IPO</div></div>
+        <div class="metric"><div class="v" id="s-mktcap"></div><div class="l">Mkt cap at IPO (HK$24.05)</div></div>
+        <div class="metric"><div class="v" id="s-offer"></div><div class="l">Offer shares (~17%)</div></div>
+        <div class="metric"><div class="v" id="s-conv"></div><div class="l">From preferred conversion</div></div>
+      </div>
+      <div class="note" id="struct-note"></div>
+    </div>
+
+    <!-- HOLDER WATCH: sell-likelihood -->
+    <div class="card">
+      <h2>Holder watch — sell-likelihood after lock-up <span class="sub">— subjective analyst estimate</span></h2>
+      <table>
+        <thead><tr><th>Holder</th><th>Type</th><th>Stake (post-IPO)</th><th>Lock-up</th><th style="width:170px">Sell likelihood</th></tr></thead>
+        <tbody id="holders"></tbody>
+      </table>
+      <div class="note" id="holder-note"></div>
+    </div>
+
+    <!-- EXEC WATCH -->
+    <div class="card">
+      <h2>Executive watch (CxO)</h2>
+      <div class="exec" id="execs"></div>
+      <div class="note">LinkedIn does not permit automated feed access, so live CxO posts can't be pulled in. These are direct profile/source links plus any public commentary surfaced via news search on each refresh.</div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    Auto-maintained by a twice-daily scheduled task (web research + direction re-assessment). Sell-likelihood figures are subjective analyst estimates, not data.<br>
+    Not investment advice. Single-stock biotech is high risk — you can lose your entire stake.
+  </div>
+</div>
+
+<script>
+/* ===== DATA (the scheduled task rewrites this block on each refresh) ===== */
+const DATA = {"updated": "22 Jun 2026, 21:45 CET", "direction": {"call": "CONDITIONAL BUY", "cls": "b-cond"}, "metrics": {"price": "HK$40.0", "ipo": "HK$24.05", "high": "HK$80.90", "cash": "US$393m"}, "proj": {"anchor": 40, "anchorLabel": "HK$40 (22 Jun 2026)", "maxTicket": 8000, "tranches": 3, "probs": {"bear": 0.35, "base": 0.45, "bull": 0.2}, "horizons": [{"h": "6 months", "bear": [22, 28], "base": [36, 48], "bull": [60, 80]}, {"h": "1 year", "bear": [18, 28], "base": [40, 55], "bull": [70, 100]}, {"h": "3 years", "bear": [10, 22], "base": [50, 80], "bull": [120, 200]}, {"h": "5 years", "bear": [5, 18], "base": [60, 110], "bull": [180, 320]}], "note": "Illustrative scenarios anchored at ~HK$40 (22 Jun 2026), built from the bear/base/bull DD logic. Returns are price-multiple based and ignore HK$/CHF FX moves. Probabilities and bands are subjective estimates — single-stock biotech can lose its entire value. Not financial advice."}, "px": {"hkd": "40.02", "usd": "5.13", "chg": "+13.8% (1d)", "dir": "up", "asof": "22 Jun 2026", "note": "USD ≈ HKD ÷ 7.80 (HK$ is USD-pegged). Verify live — intraday range was HK$36.1–44.5 on the SK-deal spike. The sparkline below works in-app; the full interactive TradingView chart renders in the online/hosted version."}, "series": [{"d": "30 Dec 25", "p": 24.05}, {"d": "20 Feb 26", "p": 80.9}, {"d": "10 Jun 26", "p": 32.92}, {"d": "22 Jun 26", "p": 40.02}], "rationale": ["Thesis intact: lead asset rentosertib (IPF) on track for oral Phase 3 start in H2 2026 — the defining catalyst.", "Deal momentum strong: SK Biopharmaceuticals (up to US$2.5bn, 22 Jun) and Servier (US$888m, Jan) validate the platform — though both are milestone-heavy with small upfronts.", "Near-term overhang: all major 6-month lock-ups expire ~29–30 Jun 2026; watch for VC/cornerstone selling.", "Valuation still narrative-driven — stock round-tripped HK$35 → HK$81 → ~HK$33. Size small, stage entries."], "note": "Direction is re-assessed on every refresh. Recommended max position: CHF 6,000–8,000 (≤5% of portfolio). Analysis, not personalised financial advice — verify live price/FX before trading.", "catalysts": [{"date": "29 Jun 2026", "type": "risk", "t": "IPO lock-up expiry", "d": "Cornerstone & pre-IPO holders free to sell — potential supply overhang."}, {"date": "H2 2026", "type": "clin", "t": "Rentosertib oral Phase 3 start — IPF", "pill": "KEY", "d": "Pivotal trial for the lead AI-designed asset; the single biggest value driver."}, {"date": "H2 2026", "type": "clin", "t": "Rentosertib inhalation Phase 1", "d": "China IND cleared; world-first AI drug in a direct-to-lung study."}, {"date": "late 2026 / 2027", "type": "clin", "t": "ISM5411 Phase 2a readout — IBD", "d": "Gut-restricted PHD1/2 inhibitor; BETHESDA trial dosing underway."}, {"date": "2027", "type": "clin", "t": "ISM8969 Phase 1 data — NLRP3 / CNS", "d": "Brain-penetrant inhibitor (Hygtia collab); first-in-human dosing done 17 Jun 2026."}, {"date": "2027", "type": "clin", "t": "Oncology Phase 1 readouts", "d": "ISM6331 (pan-TEAD) & ISM3412 (MAT2A) global trials — solid-tumor data."}, {"date": "~Mar 2027", "type": "corp", "t": "FY2026 annual results", "d": "Revenue recovery, cash burn vs ~US$393m, updated pipeline guidance."}, {"date": "ongoing", "type": "corp", "t": "New licensing deals & candidate nominations", "d": "Guidance: 40–50 preclinical candidates over 2–3 yrs; partner milestones."}], "news": [{"date": "22 Jun 2026 · time n/d (BIO 2026)", "src": "PRNewswire / Fierce Biotech", "hl": "Up to US$2.5bn AI drug-discovery deal with SK Biopharmaceuticals (neuroimmune/CNS)", "sent": "pos", "url": "https://www.fiercebiotech.com/biotech/insilico-lands-heavily-backloaded-25b-ai-drug-discovery-deal-sk-biopharm", "summary": "Announced at the BIO 2026 convention: Insilico and Korea's SK Biopharmaceuticals will discover AI-enabled candidates for neuroimmune/CNS disorders. Total potential value exceeds US$2.5bn (development, regulatory & commercial milestones + single-digit royalties); Insilico gets up to US$18m upfront/near-term. Exact release time not disclosed.", "km": ["Largest headline deal value to date, but heavily back-loaded (only ~US$18m upfront)", "Pushes Insilico deeper into CNS/neuroimmunology", "SK leads late-stage development & commercialization; Insilico does discovery"]}, {"date": "17 Jun 2026, 09:00 ET", "src": "PRNewswire / BioSpace", "hl": "First-in-human dosing of NLRP3 inhibitor ISM8969 (Hygtia collab)", "sent": "pos", "url": "https://www.biospace.com/press-releases/insilico-completes-first-in-human-dosing-in-phase-i-clinical-study-of-ai-driven-nlrp3-inhibitor-ism8969-achieving-first-clinical-milestone-in-collaboration-with-hygtia-therapeutics", "summary": "First patient dosed in the Phase 1 (Australia; SAD + MAD) study of ISM8969, an oral, brain-penetrant NLRP3 inflammasome inhibitor for neuroinflammation/CNS disorders incl. Parkinson's. ~100 participants planned. Insilico eligible for up to US$66m in upfront + milestones; 50/50 global rights with Hygtia.", "km": ["First clinical milestone in the Hygtia partnership", "Brain-penetrant NLRP3 is a differentiated, high-interest mechanism", "13 of 31 nominated candidates now have IND approval/clearance"]}, {"date": "28 Apr 2026, 21:00 ET", "src": "PRNewswire", "hl": "Rentosertib inhalation solution receives China IND clearance", "sent": "pos", "url": "https://www.prnewswire.com/news-releases/insilicos-rentosertib-inhalation-solution-receives-ind-clearance-for-the-worlds-first-ai-driven-candidate-to-enter-direct-to-lung-clinical-study-302755747.html", "summary": "China's CDE cleared an IND for an inhaled formulation of rentosertib — described as the world's first AI-designed candidate to enter a direct-to-lung clinical study, running in parallel with the oral IPF program.", "km": ["Second shot on goal for the lead IPF asset", "Inhaled delivery could improve lung exposure / safety", "Reinforces rentosertib as the franchise driver"]}, {"date": "~22 Jan 2026 · time n/d (CCC 2026)", "src": "Insilico / PRNewswire", "hl": "3 abstracts on ISM5411 (IBD) at Crohn's & Colitis Congress 2026", "sent": "pos", "url": "https://insilico.com/news/28ohjfj6u1-insilico-medicine-to-present-3-abstracts", "summary": "Insilico presented Phase 1 (healthy-volunteer) and preclinical safety/efficacy data for ISM5411, a gut-restricted PHD1/2 inhibitor for inflammatory bowel disease, ahead of its Phase 2a BETHESDA trial. Exact presentation date/time per congress agenda.", "km": ["Builds the data package for the IBD program", "Gut-restricted design targets efficacy with low systemic exposure", "Supports progression into Phase 2a"]}, {"date": "04 Jan 2026, 19:30 ET", "src": "PRNewswire", "hl": "US$888m multi-year oncology collaboration with Servier", "sent": "pos", "url": "https://www.prnewswire.com/news-releases/insilico-medicine-announce-us888-million-multi-year-collaboration-with-servier-for-drug-discovery-and-development-in-oncology-302652132.html", "summary": "Insilico and France's Servier agreed a multi-year oncology drug-discovery collaboration worth up to US$888m in potential milestones plus royalties, announced from Cambridge, MA.", "km": ["One of Insilico's largest deals; validates the discovery engine", "Diversifies revenue toward recurring fees + milestones", "Adds a blue-chip European pharma partner"]}, {"date": "30 Dec 2025, ~09:30 HKT (dealing start)", "src": "PRNewswire", "hl": "Lists on HKEX — 2025's largest Hong Kong biotech IPO", "sent": "pos", "url": "https://www.prnewswire.com/news-releases/insilico-medicine-lists-on-hong-kong-stock-exchange-showing-ai-drug-discovery-momentum-with-2025s-largest-hong-kong-biotech-ipo-302650606.html", "summary": "Insilico listed on the HKEX Main Board (03696) at HK$24.05, raising ~US$293m in 2025's largest HK biotech IPO; the retail tranche was oversubscribed ~1,427x. Dealing commenced at the HK market open on 30 Dec 2025.", "km": ["Resolves the prior private-market access barrier", "~US$393m cash post-IPO funds multi-year runway", "First AI-biotech listed under HKEX Chapter 18A"]}], "lockups": [{"cls": "Cornerstone investors", "basis": "Lilly, Tencent, Temasek, Schroders +12 — 6-mo", "expiry": "29 Jun 2026", "status": "soon"}, {"cls": "Pre-IPO / Series A–E investors", "basis": "6-month standard lock-up", "expiry": "~30 Jun 2026", "status": "soon"}, {"cls": "Founder Zhavoronkov", "basis": "6-mo undertaking (no controlling-SH 12-mo applies)", "expiry": "~30 Jun 2026", "status": "soon"}, {"cls": "Founder voting proxy (Aliper/Ozerov/Lane)", "basis": "Voting pact, not a sale lock", "expiry": "~Dec 2027", "status": "locked"}], "lockupNote": "Source: HKEX prospectus (18 Dec 2025). Principal lock-ups run ~6 months (180 days) from the 30 Dec 2025 listing → expiring ~29–30 Jun 2026.", "shares": {"total": "557,418,500", "mktcap": "HK$13.4bn", "offer": "94,690,500", "conv": "383,418,500"}, "structNote": "No controlling shareholder: the largest holder (founder Zhavoronkov) controls only ~8.37% of votes, so HKEX's 12-month controlling-shareholder lock-up does not apply. Total shares include 383,418,500 ordinary shares from preferred conversion at listing. Source: HKEX prospectus.", "holders": [{"who": "Alex Zhavoronkov (Founder, CEO)", "type": "CxO", "stake": "7.64% (~42.6m sh)", "lock": "~30 Jun 2026", "pct": 10, "link": "https://www.linkedin.com/in/alexzhavoronkov/"}, {"who": "Feng Ren (Co-CEO, CSO)", "type": "CxO", "stake": "undisclosed (small)", "lock": "~30 Jun 2026", "pct": 18, "link": "https://insilico.com/team"}, {"who": "Aleksandr Aliper (President)", "type": "CxO", "stake": "85,000 sh (voting proxy)", "lock": "voting pact to ~Dec 2027", "pct": 15, "link": "https://insilico.com/team"}, {"who": "Eli Lilly", "type": "Strategic / cornerstone", "stake": "cornerstone", "lock": "29 Jun 2026", "pct": 18, "link": "https://www.lilly.com/"}, {"who": "Tencent", "type": "Strategic / cornerstone", "stake": "cornerstone", "lock": "29 Jun 2026", "pct": 35, "link": "https://www.tencent.com/en-us/investors.html"}, {"who": "Temasek", "type": "Sovereign / cornerstone", "stake": "cornerstone", "lock": "29 Jun 2026", "pct": 35, "link": "https://www.temasek.com.sg/"}, {"who": "Schroders", "type": "Asset manager / cornerstone", "stake": "cornerstone", "lock": "29 Jun 2026", "pct": 60, "link": "https://www.schroders.com/"}, {"who": "Qiming / Value Partners (round leads)", "type": "VC / pre-IPO", "stake": "large pre-IPO blocks", "lock": "~30 Jun 2026", "pct": 65, "link": "https://www.qimingvc.com/en"}, {"who": "Mesolite Gem Investments", "type": "Financial / pre-IPO", "stake": "~9.7%", "lock": "~30 Jun 2026", "pct": 55, "link": "https://www1.hkexnews.hk/search/titlesearch.xhtml"}], "holderNote": "Subjective estimates of the probability each holder trims/exits in the months after lock-up expiry — NOT data or guidance. Logic: founders/strategics (Lilly) least likely to sell (signaling, partnership, voting control); VCs/asset managers most likely (return capital to LPs, mandate rebalancing). Re-assessed each refresh against actual HKEXnews disclosures of interest.", "execs": [{"n": "Alex Zhavoronkov, PhD", "r": "Founder & co-CEO", "url": "https://www.linkedin.com/in/alexzhavoronkov/"}, {"n": "Feng Ren, PhD", "r": "Co-CEO & CSO", "url": "https://insilico.com/team"}, {"n": "Investor relations", "r": "03696.HK filings & announcements", "url": "https://insilico.com/news"}, {"n": "HKEX disclosures", "r": "Filings: lock-ups, holdings, DI", "url": "https://www1.hkexnews.hk/search/titlesearch.xhtml"}]};
+
+/* ===== RENDER ===== */
+function lvl(p){return p>=50?'lvl-high':p>=30?'lvl-med':'lvl-low';}
+document.getElementById('updated').textContent = DATA.updated;
+const b=document.getElementById('dir-badge'); b.textContent=DATA.direction.call; b.className="badge "+DATA.direction.cls;
+document.getElementById('m-price').textContent=DATA.metrics.price;
+document.getElementById('m-ipo').textContent=DATA.metrics.ipo;
+document.getElementById('m-high').textContent=DATA.metrics.high;
+document.getElementById('m-cash').textContent=DATA.metrics.cash;
+if(DATA.px){
+  document.getElementById('px-hkd').textContent='HK$'+DATA.px.hkd;
+  document.getElementById('px-usd').textContent='US$'+DATA.px.usd;
+  const pxc=document.getElementById('px-chg'); pxc.textContent=DATA.px.chg; pxc.className='pxv '+(DATA.px.dir==='down'?'down':'up');
+  document.getElementById('px-asof').textContent='as of '+DATA.px.asof;
+  document.getElementById('px-note').textContent=DATA.px.note;
+}
+/* in-app price sparkline (pure SVG, no external libs) */
+function renderSpark(){
+  const el=document.getElementById('spark'); const s=DATA.series||[];
+  if(!el || s.length<2) return;
+  const W=600,H=120,pad=30;
+  const ps=s.map(x=>x.p), mn=Math.min(...ps), mx=Math.max(...ps);
+  const xs=i=> pad + i*(W-2*pad)/(s.length-1);
+  const ys=p=> H-pad - (p-mn)/((mx-mn)||1)*(H-2*pad);
+  const pts=s.map((x,i)=>xs(i)+','+ys(x.p)).join(' ');
+  const up = s[s.length-1].p >= s[0].p, col = up?'#1d9e75':'#c0392b';
+  const iMx=ps.indexOf(mx), iMn=ps.indexOf(mn);
+  let g='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Insilico price since IPO">';
+  g+='<polyline fill="none" stroke="'+col+'" stroke-width="2.5" stroke-linejoin="round" points="'+pts+'"/>';
+  s.forEach((x,i)=>{ g+='<circle cx="'+xs(i)+'" cy="'+ys(x.p)+'" r="3.2" fill="'+col+'"/>'; });
+  g+='<text x="'+xs(iMx)+'" y="'+(ys(mx)-7)+'" font-size="12" fill="#5b6675" text-anchor="middle">HK$'+mx.toFixed(2)+'</text>';
+  g+='<text x="'+xs(iMn)+'" y="'+(ys(mn)+16)+'" font-size="12" fill="#5b6675" text-anchor="middle">HK$'+mn.toFixed(2)+'</text>';
+  g+='<text x="'+pad+'" y="'+(H-7)+'" font-size="10.5" fill="#9aa3b2" text-anchor="start">'+s[0].d+'</text>';
+  g+='<text x="'+(W-pad)+'" y="'+(H-7)+'" font-size="10.5" fill="#9aa3b2" text-anchor="end">'+s[s.length-1].d+'</text>';
+  g+='</svg>';
+  el.innerHTML=g;
+}
+renderSpark();
+document.getElementById('dir-rationale').innerHTML = DATA.rationale.map(r=>`<li>${r}</li>`).join('');
+document.getElementById('dir-note').textContent = DATA.note;
+
+document.getElementById('catalysts').innerHTML = DATA.catalysts.map(c=>{
+  const pill = c.pill?`<span class="pill p-clin">${c.pill}</span>`:'';
+  return `<li><span class="date">${c.date}</span><span class="dot dot-${c.type}"></span>
+    <div class="body"><div class="t">${c.t}${pill}</div><div class="d">${c.d}</div></div></li>`;
+}).join('');
+
+document.getElementById('news').innerHTML = DATA.news.map((n,i)=>{
+  const s = n.sent==='pos'?'<span class="sent s-pos">+</span>':n.sent==='neg'?'<span class="sent s-neg">−</span>':'<span class="sent s-neu">·</span>';
+  const km = (n.km||[]).map(k=>`<li>${k}</li>`).join('');
+  return `<li id="nw${i}">
+    <div class="row">
+      <div>
+        <div class="hl"><a href="${n.url}" target="_blank" rel="noopener">${n.hl}</a>${s}</div>
+        <div class="meta">${n.date} · ${n.src}</div>
+      </div>
+      <button class="toggle" aria-label="Show summary" onclick="document.getElementById('nw${i}').classList.toggle('open')"><span class="chev">▾</span></button>
+    </div>
+    <div class="detail">
+      <div class="lbl">Summary</div><div>${n.summary||''}</div>
+      ${km?`<div class="lbl" style="margin-top:8px">Key messages</div><ul class="km">${km}</ul>`:''}
+    </div>
+  </li>`;
+}).join('');
+
+document.getElementById('lockups').innerHTML = DATA.lockups.map(l=>{
+  const tg = l.status==='open'?'<span class="tag t-open">EXPIRED / OPEN</span>'
+        : l.status==='soon'?'<span class="tag t-soon">EXPIRES SOON</span>'
+        : '<span class="tag t-locked">LOCKED</span>';
+  return `<tr><td><strong>${l.cls}</strong></td><td>${l.basis}</td><td>${l.expiry}</td><td>${tg}</td></tr>`;
+}).join('');
+document.getElementById('lockup-note').textContent = DATA.lockupNote;
+
+document.getElementById('s-total').textContent=DATA.shares.total;
+document.getElementById('s-mktcap').textContent=DATA.shares.mktcap;
+document.getElementById('s-offer').textContent=DATA.shares.offer;
+document.getElementById('s-conv').textContent=DATA.shares.conv;
+document.getElementById('struct-note').textContent=DATA.structNote;
+
+document.getElementById('holders').innerHTML = DATA.holders.map(h=>{
+  const lk = h.link?`<a class="hlink" href="${h.link}" target="_blank" rel="noopener">↗</a>`:'';
+  return `<tr><td><strong>${h.who}</strong>${lk}</td><td>${h.type}</td><td>${h.stake}</td><td>${h.lock}</td>
+    <td><div class="barwrap ${lvl(h.pct)}"><div class="bar"><i style="width:${h.pct}%"></i></div><span class="pct">${h.pct}%</span></div></td></tr>`;
+}).join('');
+document.getElementById('holder-note').textContent = DATA.holderNote;
+
+document.getElementById('execs').innerHTML = DATA.execs.map(p=>
+  `<div class="person"><div class="n">${p.n}</div><div class="r">${p.r}</div>
+   <a href="${p.url}" target="_blank" rel="noopener">Open profile / source ↗</a></div>`).join('');
+
+/* ===== projection & position sizing ===== */
+const P = DATA.proj;
+function chf(n){ return 'CHF ' + Math.round(n).toLocaleString('en-US'); }
+function mmult(band){ return ((band[0]+band[1])/2) / P.anchor; }
+function recalcBudget(){
+  const bud = Math.max(0, +document.getElementById('budget').value || 0);
+  const maxPos = 0.05 * bud;
+  const ticket = Math.min(maxPos, P.maxTicket);
+  const first = ticket / P.tranches;
+  document.getElementById('reco').innerHTML =
+    'Recommended (≤5% of budget): max single-stock position <strong>'+chf(maxPos)+'</strong> · '+
+    'suggested total ticket <strong>'+chf(ticket)+'</strong> · '+
+    'recommended <strong>first investment</strong> (stage in '+P.tranches+') <strong>'+chf(first)+'</strong>.';
+  document.getElementById('initial').value = Math.max(0, Math.round(first));
+  compute();
+}
+function compute(){
+  const init = Math.max(0, +document.getElementById('initial').value || 0);
+  const pr = P.probs;
+  document.getElementById('proj').innerHTML = P.horizons.map(h=>{
+    const mb=mmult(h.bear), mba=mmult(h.base), mbu=mmult(h.bull);
+    const pw = pr.bear*mb + pr.base*mba + pr.bull*mbu;
+    const cell=(m,col)=>'<td style="color:'+col+'">'+chf(init*m)+
+      '<div style="font-size:11px;color:var(--muted);font-weight:400">'+(m>=1?'+':'')+Math.round((m-1)*100)+'%</div></td>';
+    return '<tr><td><strong>'+h.h+'</strong></td>'+cell(mb,'#922')+cell(mba,'#8a5a08')+cell(mbu,'#0f6e56')+
+      '<td><strong>'+chf(init*pw)+'</strong></td></tr>';
+  }).join('');
+  document.getElementById('proj-note').textContent = P.note;
+}
+recalcBudget();
+
+/* ===== collapsible sections: inject a chevron on each card and wrap the body ===== */
+document.querySelectorAll('.card').forEach(card=>{
+  const h2 = card.querySelector('h2');
+  if(!h2) return;
+  const btn = document.createElement('button');
+  btn.className = 'sectoggle';
+  btn.setAttribute('aria-label','Minimize or maximize section');
+  btn.innerHTML = '<span class="chev">▾</span>';
+  const body = document.createElement('div');
+  body.className = 'secbody';
+  while(h2.nextSibling){ body.appendChild(h2.nextSibling); }
+  card.appendChild(body);
+  h2.insertBefore(btn, h2.firstChild);
+  btn.addEventListener('click', ()=> card.classList.toggle('collapsed'));
+});
+</script>
+</body>
+</html>
