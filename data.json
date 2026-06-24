@@ -1,5 +1,5 @@
 {
-  "updated": "22 Jun 2026, 21:45 CET",
+  "updated": "24 Jun 2026, 10:00 CET",
   "direction": {
     "call": "CONDITIONAL BUY",
     "cls": "b-cond"
@@ -125,11 +125,11 @@
       "d": "Cornerstone & pre-IPO holders free to sell — potential supply overhang."
     },
     {
-      "date": "H2 2026",
+      "date": "Q4 2026",
       "type": "clin",
       "t": "Rentosertib oral Phase 3 start — IPF",
       "pill": "KEY",
-      "d": "Pivotal trial for the lead AI-designed asset; the single biggest value driver."
+      "d": "China Phase 3 (500+ pts) first dosing; the single biggest value driver. See Phase 3 timeline below."
     },
     {
       "date": "H2 2026",
@@ -296,7 +296,7 @@
       "type": "CxO",
       "stake": "undisclosed (small)",
       "lock": "~30 Jun 2026",
-      "pct": 18,
+      "pct": 15,
       "link": "https://insilico.com/team"
     },
     {
@@ -304,7 +304,7 @@
       "type": "CxO",
       "stake": "85,000 sh (voting proxy)",
       "lock": "voting pact to ~Dec 2027",
-      "pct": 15,
+      "pct": 12,
       "link": "https://insilico.com/team"
     },
     {
@@ -312,7 +312,7 @@
       "type": "Strategic / cornerstone",
       "stake": "cornerstone",
       "lock": "29 Jun 2026",
-      "pct": 18,
+      "pct": 15,
       "link": "https://www.lilly.com/"
     },
     {
@@ -336,7 +336,7 @@
       "type": "Asset manager / cornerstone",
       "stake": "cornerstone",
       "lock": "29 Jun 2026",
-      "pct": 60,
+      "pct": 62,
       "link": "https://www.schroders.com/"
     },
     {
@@ -344,7 +344,7 @@
       "type": "VC / pre-IPO",
       "stake": "large pre-IPO blocks",
       "lock": "~30 Jun 2026",
-      "pct": 65,
+      "pct": 70,
       "link": "https://www.qimingvc.com/en"
     },
     {
@@ -352,11 +352,102 @@
       "type": "Financial / pre-IPO",
       "stake": "~9.7%",
       "lock": "~30 Jun 2026",
-      "pct": 55,
+      "pct": 58,
       "link": "https://www1.hkexnews.hk/search/titlesearch.xhtml"
     }
   ],
-  "holderNote": "Subjective estimates of the probability each holder trims/exits in the months after lock-up expiry — NOT data or guidance. Logic: founders/strategics (Lilly) least likely to sell (signaling, partnership, voting control); VCs/asset managers most likely (return capital to LPs, mandate rebalancing). Re-assessed each refresh against actual HKEXnews disclosures of interest.",
+  "holderNote": "Updated 24 Jun 2026 (lock-up ~29–30 Jun, days away). Two new forces: the +14% spike to ~HK$40 on the SK deal invites profit-taking into strength, but the H2-2026 Phase 3 catalyst rewards patience. Heaviest near-term pressure is the VC/asset-manager bucket (Qiming/Value 70, Mesolite 58, Schroders 62); founders/strategics steady. Subjective estimates, NOT guidance — watch HKEXnews 'Disclosure of Interests' in early July for actual selling.",
+  "phase3": {
+    "design": [
+      "Asset: oral rentosertib (TNIK inhibitor), lead dose 60 mg once-daily — the only Phase 2a arm that beat placebo (+98.4 mL vs −20.3 mL FVC at 12 wks).",
+      "China Phase 3: 500+ patients. US Phase 2b: 200+ patients. Further 2b/3 studies across 2026–2027.",
+      "Designations: FDA Orphan Drug (Feb 2023); China CDE Breakthrough Therapy (May 2025).",
+      "Likely design (template, not yet confirmed): double-blind, placebo-controlled, ~1:1; primary = rate of FVC decline over 52 weeks; ± background antifibrotics (nintedanib/pirfenidone)."
+    ],
+    "designNote": "Disclosed by Insilico: dose, patient counts, timing, designations. Endpoint/duration/randomisation follow the standard IPF pivotal template and are inference until the protocol is registered. All dates below are ESTIMATES and will shift with enrollment.",
+    "timeline": [
+      {
+        "date": "Q3 2026",
+        "type": "corp",
+        "t": "Protocol finalized · US Phase 2b IND",
+        "d": "Scope & dose locked; US 2b IND filing / clearance."
+      },
+      {
+        "date": "Q3–Q4 2026",
+        "type": "clin",
+        "t": "Trial registration & design disclosure",
+        "d": "ClinicalTrials.gov + China CDE reveal N, endpoints, duration, interim plan, background-therapy rule."
+      },
+      {
+        "date": "Q4 2026",
+        "type": "clin",
+        "t": "China Phase 3 first patient dosed",
+        "pill": "KEY",
+        "d": "500+ pts; confirms the headline catalyst is on track."
+      },
+      {
+        "date": "Q4 2026 – H1 2027",
+        "type": "clin",
+        "t": "Site activation & enrollment ramp",
+        "d": "Enrollment-pace updates; a slow ramp pushes the readout right."
+      },
+      {
+        "date": "H1 2027",
+        "type": "clin",
+        "t": "US Phase 2b dosing underway",
+        "d": "200+ pts; parallel registrational support."
+      },
+      {
+        "date": "2027–2028 (periodic)",
+        "type": "risk",
+        "t": "DSMB reviews · liver (ALT/AST) watch",
+        "d": "Phase 2a saw dose-dependent LFT rises & diarrhea; a hold/dose change is a major negative."
+      },
+      {
+        "date": "H1–H2 2027",
+        "type": "clin",
+        "t": "China enrollment completion",
+        "d": "De-risks timeline; starts the 52-week readout clock."
+      },
+      {
+        "date": "Mid–late 2027",
+        "type": "clin",
+        "t": "US Phase 2b topline",
+        "d": "Separate readout that de-risks (or dents) the global story."
+      },
+      {
+        "date": "2028 (if built in)",
+        "type": "risk",
+        "t": "Interim efficacy / futility analysis",
+        "d": "Potential binary mover if pre-specified."
+      },
+      {
+        "date": "H2 2028 – 2029",
+        "type": "clin",
+        "t": "China Phase 3 52-week topline (FVC)",
+        "pill": "BINARY",
+        "d": "The defining event for the entire thesis."
+      },
+      {
+        "date": "2029",
+        "type": "corp",
+        "t": "Congress (ATS/ERS) + journal publication",
+        "d": "Quality & durability of the topline data."
+      },
+      {
+        "date": "2029–2030",
+        "type": "corp",
+        "t": "China NMPA NDA → approval; FDA path",
+        "d": "Breakthrough → possible priority review; ex-China licensing likely around the data."
+      },
+      {
+        "date": "Throughout",
+        "type": "corp",
+        "t": "Competitor read-throughs",
+        "d": "BI nerandomilast (FIBRONEER) & other IPF agents move sentiment and the TNIK narrative."
+      }
+    ]
+  },
   "execs": [
     {
       "n": "Alex Zhavoronkov, PhD",

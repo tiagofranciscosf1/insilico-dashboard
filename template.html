@@ -51,6 +51,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Bl
 .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;margin-left:6px;vertical-align:middle;text-transform:uppercase;letter-spacing:.4px}
 .p-clin{background:var(--greenbg);color:#0f6e56}
 .dot-clin{background:var(--green)}.dot-risk{background:var(--red)}.dot-corp{background:#8a93a3}
+#p3timeline{padding-left:158px}
+#p3timeline:before{left:140px}
+#p3timeline .date{left:-158px;width:128px;white-space:normal;line-height:1.2}
+#p3design li{padding:3px 0}
+@media(max-width:560px){#p3timeline{padding-left:108px}#p3timeline:before{left:92px}#p3timeline .date{left:-108px;width:82px}}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:12px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -235,6 +240,19 @@ th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;le
       <div class="note" id="holder-note"></div>
     </div>
 
+    <!-- PHASE 3 -->
+    <div class="card">
+      <h2>Rentosertib Phase 3 — design &amp; inflection timeline <span class="sub">— IPF · estimated dates (ranges)</span></h2>
+      <ul id="p3design"></ul>
+      <div class="legend">
+        <span><i class="dot-clin"></i>Clinical milestone</span>
+        <span><i class="dot-risk"></i>Risk / safety</span>
+        <span><i class="dot-corp"></i>Regulatory / corporate</span>
+      </div>
+      <ul class="tl" id="p3timeline"></ul>
+      <div class="note" id="p3note"></div>
+    </div>
+
     <!-- EXEC WATCH -->
     <div class="card">
       <h2>Executive watch (CxO)</h2>
@@ -339,6 +357,15 @@ document.getElementById('holders').innerHTML = DATA.holders.map(h=>{
 }).join('');
 document.getElementById('holder-note').textContent = DATA.holderNote;
 
+if(DATA.phase3){
+  document.getElementById('p3design').innerHTML = DATA.phase3.design.map(d=>`<li>${d}</li>`).join('');
+  document.getElementById('p3note').textContent = DATA.phase3.designNote;
+  document.getElementById('p3timeline').innerHTML = DATA.phase3.timeline.map(c=>{
+    const pill = c.pill?`<span class="pill p-clin">${c.pill}</span>`:'';
+    return `<li><span class="date">${c.date}</span><span class="dot dot-${c.type}"></span>
+      <div class="body"><div class="t">${c.t}${pill}</div><div class="d">${c.d}</div></div></li>`;
+  }).join('');
+}
 document.getElementById('execs').innerHTML = DATA.execs.map(p=>
   `<div class="person"><div class="n">${p.n}</div><div class="r">${p.r}</div>
    <a href="${p.url}" target="_blank" rel="noopener">Open profile / source ↗</a></div>`).join('');
