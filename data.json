@@ -1,5 +1,5 @@
 {
-  "updated": "24 Jun 2026, 10:00 CET",
+  "updated": "24 Jun 2026, 10:30 CET",
   "direction": {
     "call": "CONDITIONAL BUY",
     "cls": "b-cond"
@@ -136,6 +136,19 @@
       "type": "clin",
       "t": "Rentosertib inhalation Phase 1",
       "d": "China IND cleared; world-first AI drug in a direct-to-lung study."
+    },
+    {
+      "date": "Mid–late 2027",
+      "type": "clin",
+      "t": "Rentosertib US Phase 2b topline",
+      "d": "200+ pts; de-risks (or dents) the global registrational story. See Phase 3 timeline."
+    },
+    {
+      "date": "H2 2028 – 2029",
+      "type": "clin",
+      "t": "Rentosertib Phase 3 52-wk topline — IPF",
+      "pill": "BINARY",
+      "d": "China Phase 3 (500+ pts) primary FVC readout — the defining event for the thesis."
     },
     {
       "date": "late 2026 / 2027",
